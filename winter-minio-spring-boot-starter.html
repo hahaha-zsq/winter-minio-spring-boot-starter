@@ -312,8 +312,17 @@
       gap: var(--space-sm);
     }
 
+    .reason-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-sm) 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
     .reason-list li {
-      padding-left: var(--space-md);
+      padding-left: 24px;
       position: relative;
       font-family: var(--font-body);
       font-size: 14px;
@@ -326,11 +335,13 @@
       content: '';
       position: absolute;
       left: 0;
-      top: 8px;
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--text-disabled);
+      top: 2px;
+      width: 16px;
+      height: 16px;
+      background: var(--accent);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E") center/contain no-repeat;
+      -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E") center/contain no-repeat;
+      opacity: 0.6;
     }
 
     .features-grid {
@@ -711,14 +722,50 @@
     .gap-xs { gap: var(--space-xs); }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
     @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+    .icon { display:inline-block; width:1em; height:1em; vertical-align:-0.125em; fill:currentColor; flex-shrink:0; }
+    .icon-sm { width:14px; height:14px; }
+    .icon-md { width:18px; height:18px; }
+    .icon-lg { width:24px; height:24px; }
+    .icon-xl { width:32px; height:32px; }
+    .icon-accent { color:var(--accent); }
+    .icon-muted { color:var(--text-disabled); }
+    .icon-success { color:var(--success); }
+    .icon-warning { color:var(--warning); }
+    .icon-interactive { color:var(--interactive); }
   </style>
 </head>
 <body>
 
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+  <defs>
+    <symbol id="ic-cloud" viewBox="0 0 24 24"><path d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></symbol>
+    <symbol id="ic-file" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z"/><path d="M8 13h8v2H8zm0 4h5v2H8z"/></symbol>
+    <symbol id="ic-api" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></symbol>
+    <symbol id="ic-server" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 6H4V4h16v4z"/><path d="M20 10H4c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 6H4v-4h16v4z"/><path d="M20 18H4c-1.1 0-2 .9-2 2v2h2v-2h16v2h2v-2c0-1.1-.9-2-2-2z"/></symbol>
+    <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></symbol>
+    <symbol id="ic-grid" viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></symbol>
+    <symbol id="ic-bucket" viewBox="0 0 24 24"><path d="M19 6h-1V2H6v4H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H8v2h8v-2h-3v-2.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 13.63 21 11.55 21 9V8c0-1.1-.9-2-2-2zM8 4h8v2H8V4zm9 5c0 2.76-2.24 5-5 5s-5-2.24-5-5v-1h10v1z"/></symbol>
+    <symbol id="ic-object" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/><path d="M9 13l2 2 4-4"/></symbol>
+    <symbol id="ic-link" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></symbol>
+    <symbol id="ic-upload" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></symbol>
+    <symbol id="ic-tag" viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></symbol>
+    <symbol id="ic-clock" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></symbol>
+    <symbol id="ic-question" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></symbol>
+    <symbol id="ic-github" viewBox="0 0 24 24"><path d="M12 .3a12 12 0 0 0-3.8 23.38c.6.12.83-.26.83-.58v-2.23c-3.34.72-4.04-1.44-4.04-1.44-.55-1.38-1.34-1.75-1.34-1.75-1.08-.74.08-.73.08-.73 1.2.08 1.83 1.23 1.83 1.23 1.08 1.84 2.82 1.3 3.5 1 .1-.78.42-1.3.76-1.6-2.66-.3-5.46-1.33-5.46-5.93 0-1.31.47-2.38 1.24-3.22-.14-.3-.54-1.52.1-3.18 0 0 1.02-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.28-1.55 3.3-1.23 3.3-1.23.64 1.66.24 2.88.12 3.18a4.65 4.65 0 0 1 1.23 3.22c0 4.61-2.8 5.63-5.48 5.92.42.36.81 1.1.81 2.22v3.3c0 .32.2.7.82.58A12 12 0 0 0 12 .3"/></symbol>
+    <symbol id="ic-gear" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></symbol>
+    <symbol id="ic-arrow-right" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></symbol>
+    <symbol id="ic-download" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></symbol>
+    <symbol id="ic-folder" viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></symbol>
+    <symbol id="ic-star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></symbol>
+    <symbol id="ic-notification" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></symbol>
+  </defs>
+</svg>
+
   <!-- ============================ NAV ============================ -->
   <nav class="nav">
     <div class="nav-brand">
-      <span class="dot"></span>WINTER MINIO
+      <svg class="icon icon-md" style="color:var(--accent);margin-right:var(--space-sm);vertical-align:middle" aria-hidden="true"><use href="#ic-cloud"/></svg>WINTER MINIO
     </div>
     <div class="nav-meta">
       <span>v0.0.3</span>
@@ -737,23 +784,23 @@
     </p>
     <div class="hero-stats">
       <div class="hero-stat">
-        <span class="hero-stat-value">4</span>
+        <span class="hero-stat-value"><svg class="icon icon-lg icon-muted" style="vertical-align:-4px;margin-right:6px" aria-hidden="true"><use href="#ic-file"/></svg>4</span>
         <span class="hero-stat-label">Java 源文件</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-value">80+</span>
+        <span class="hero-stat-value"><svg class="icon icon-lg icon-accent" style="vertical-align:-4px;margin-right:6px" aria-hidden="true"><use href="#ic-api"/></svg>80+</span>
         <span class="hero-stat-label">API 接口</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-value">6+</span>
+        <span class="hero-stat-value"><svg class="icon icon-lg icon-muted" style="vertical-align:-4px;margin-right:6px" aria-hidden="true"><use href="#ic-server"/></svg>6+</span>
         <span class="hero-stat-label">兼容服务</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-value">3</span>
+        <span class="hero-stat-value"><svg class="icon icon-lg icon-warning" style="vertical-align:-4px;margin-right:6px" aria-hidden="true"><use href="#ic-shield"/></svg>3</span>
         <span class="hero-stat-label">策略模板</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-value">6</span>
+        <span class="hero-stat-value"><svg class="icon icon-lg icon-muted" style="vertical-align:-4px;margin-right:6px" aria-hidden="true"><use href="#ic-grid"/></svg>6</span>
         <span class="hero-stat-label">分片接口</span>
       </div>
     </div>
@@ -762,6 +809,7 @@
   <!-- ============================ OVERVIEW ============================ -->
   <section class="section">
     <div class="section-header">
+      <svg class="icon icon-md icon-accent" style="margin-right:var(--space-sm)" aria-hidden="true"><use href="#ic-cloud"/></svg>
       <span class="section-number">[01]</span>
       <span class="section-line"></span>
     </div>
@@ -786,7 +834,7 @@
           分片上传、元数据管理、版本控制、生命周期和事件通知配置。
           兼容 MinIO、AWS S3、阿里云 OSS、腾讯云 COS、华为云 OBS、七牛云 Kodo。
         </p>
-        <div class="sub-heading">为什么选择 Winter MinIO</div>
+        <div class="sub-heading"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-star"/></svg>为什么选择 Winter MinIO</div>
         <ul class="reason-list">
           <li>传统方式通过 AWS SDK 操作 S3 需要编写大量样板代码：客户端构造、连接池配置、异常处理等。</li>
           <li>本 Starter 通过 Auto-Configuration 自动化这一切，一行配置即可获得完全配置的 AmazonS3 客户端。</li>
@@ -835,6 +883,7 @@
   <!-- ============================ FEATURES ============================ -->
   <section class="section">
     <div class="section-header">
+      <svg class="icon icon-md icon-accent" style="margin-right:var(--space-sm)" aria-hidden="true"><use href="#ic-star"/></svg>
       <span class="section-number">[02]</span>
       <span class="section-line"></span>
     </div>
@@ -845,37 +894,37 @@
 
     <div class="features-grid">
       <div class="feature-card">
-        <span class="card-number">01</span>
+        <span class="card-number"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"><use href="#ic-bucket"/></svg>01</span>
         <span class="card-title">存储桶全生命周期管理</span>
         <span class="card-desc">创建、删除、检查存储桶是否存在。内置三种策略模板（READ_ONLY / WRITE_ONLY / READ_WRITE），自动生成标准 S3 Policy JSON，无需手写策略文档。</span>
         <span class="card-tag">核心</span>
       </div>
       <div class="feature-card">
-        <span class="card-number">02</span>
+        <span class="card-number"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"><use href="#ic-object"/></svg>02</span>
         <span class="card-title">对象 CRUD 与批量操作</span>
         <span class="card-desc">上传（InputStream / MultipartFile / byte[]）、下载（S3Object / InputStream / 本地文件）、删除、复制、重命名、批量删除。支持前缀列举和分页查询。</span>
         <span class="card-tag">核心</span>
       </div>
       <div class="feature-card">
-        <span class="card-number">03</span>
+        <span class="card-number"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"><use href="#ic-link"/></svg>03</span>
         <span class="card-title">预签名 URL 生成</span>
         <span class="card-desc">生成带过期时间的 GET / PUT / DELETE 预签名 URL。支持自定义过期时间（秒/分/时）、自定义 HTTP 方法、自定义域名网关 URL，适合前端直传和临时分享。</span>
         <span class="card-tag">网络</span>
       </div>
       <div class="feature-card">
-        <span class="card-number">04</span>
+        <span class="card-number"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"><use href="#ic-upload"/></svg>04</span>
         <span class="card-title">分片上传与大文件支持</span>
         <span class="card-desc">初始化分片上传、逐个上传分片、列出已上传分片、完成或中止分片。适用于大文件场景，避免 OOM。列出所有进行中的分片任务。</span>
         <span class="card-tag">核心</span>
       </div>
       <div class="feature-card">
-        <span class="card-number">05</span>
+        <span class="card-number"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"><use href="#ic-tag"/></svg>05</span>
         <span class="card-title">元数据管理与版本控制</span>
         <span class="card-desc">获取/设置对象的自定义元数据（Content-Type、用户自定义键值对）。启用/禁用存储桶版本控制，列出所有版本历史，追踪文件变更。</span>
         <span class="card-tag">管理</span>
       </div>
       <div class="feature-card">
-        <span class="card-number">06</span>
+        <span class="card-number"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"><use href="#ic-clock"/></svg>06</span>
         <span class="card-title">生命周期与事件通知</span>
         <span class="card-desc">配置存储桶生命周期规则（过期天数、迁移到 Glacier）。设置存储桶事件通知（对象创建/删除事件），支持 SNS、SQS、Lambda 目标。</span>
         <span class="card-tag">管理</span>
@@ -886,6 +935,7 @@
   <!-- ============================ ARCHITECTURE ============================ -->
   <section class="section">
     <div class="section-header">
+      <svg class="icon icon-md icon-accent" style="margin-right:var(--space-sm)" aria-hidden="true"><use href="#ic-server"/></svg>
       <span class="section-number">[03]</span>
       <span class="section-line"></span>
     </div>
@@ -894,7 +944,7 @@
       架构
     </h2>
 
-    <p class="sub-heading" style="margin-top:0">自动装配流水线</p>
+    <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-gear"/></svg>自动装配流水线</p>
     <p class="pipeline-desc">
       Spring Boot 启动时，Auto-Configuration 按以下顺序依次创建并装配各组件。
       标记红色的为可替换 Bean —— 开发者可通过 <span class="inline-code-sec">@Bean</span>
@@ -912,7 +962,7 @@
       <span class="pipeline-node">CommandRunner</span>
     </div>
 
-    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)">各组件职责</p>
+    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-grid"/></svg>各组件职责</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);margin-bottom:var(--space-xl)">
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-sm) var(--space-md)">
         <span class="caption" style="display:block;color:var(--text-display)">AmazonS3Properties</span>
@@ -936,7 +986,7 @@
       </div>
     </div>
 
-    <p class="sub-heading">自动装配时序</p>
+    <p class="sub-heading"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-arrow-right"/></svg>自动装配时序</p>
     <p class="pipeline-desc">
       每一步判断条件是否满足，条件不满足则跳过对应的 Bean 创建：
     </p>
@@ -954,7 +1004,7 @@
 
     <div class="grid-2" style="margin-top:var(--space-xl)">
       <div>
-        <p class="sub-heading" style="margin-top:0">组件依赖树</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-server"/></svg>组件依赖树</p>
         <div class="arch-tree"><span class="hl">AmazonS3AutoConfiguration</span>
 ├── <span class="sec">AmazonS3Properties</span>
 │   ├── accessKey         <span class="dim">(必填)</span>
@@ -987,7 +1037,7 @@
     └── Metadata &amp; Lifecycle <span class="dim">(7)</span></div>
       </div>
       <div>
-        <p class="sub-heading" style="margin-top:0">Bean 加载顺序</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-gear"/></svg>Bean 加载顺序</p>
         <p class="body-sm mb-lg">
           Starter 按照严格的依赖顺序注册 Bean，
           后置 Bean 依赖前置 Bean 的存在：
@@ -1004,7 +1054,7 @@
           <span class="bean-order-item">BucketInit</span>
         </div>
 
-        <p class="sub-heading">文件上传生命周期</p>
+        <p class="sub-heading"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-upload"/></svg>文件上传生命周期</p>
         <p class="body-sm mb-lg">
           一次完整的文件上传请求经过以下层级：
         </p>
@@ -1039,7 +1089,7 @@
           <span>生成访问 URL / 预签名 URL</span>
         </div>
 
-        <p class="sub-heading mt-lg">文件下载生命周期</p>
+        <p class="sub-heading mt-lg"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-download"/></svg>文件下载生命周期</p>
         <p class="body-sm mb-lg">
           流式下载请求经过以下层级，避免将大文件加载到内存：
         </p>
@@ -1074,7 +1124,7 @@
           <span>Stream 自动关闭，资源释放</span>
         </div>
 
-        <p class="sub-heading mt-lg">配置场景</p>
+        <p class="sub-heading mt-lg"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-gear"/></svg>配置场景</p>
         <div class="config-grid" style="margin-top:var(--space-sm)">
           <div class="config-card">
             <span class="config-name">MinIO 本地开发</span>
@@ -1124,6 +1174,7 @@
   <!-- ============================ WORKFLOW ============================ -->
   <section class="section">
     <div class="section-header">
+      <svg class="icon icon-md icon-accent" style="margin-right:var(--space-sm)" aria-hidden="true"><use href="#ic-folder"/></svg>
       <span class="section-number">[04]</span>
       <span class="section-line"></span>
     </div>
@@ -1134,7 +1185,7 @@
 
     <div class="workflow-steps">
       <div class="workflow-step">
-        <span class="step-num">01</span>
+        <span class="step-num"><svg class="icon icon-sm icon-accent" style="vertical-align:-3px;margin-right:4px" aria-hidden="true"><use href="#ic-download"/></svg>01</span>
         <div class="step-content">
           <div class="step-title">添加 Maven 依赖</div>
           <div class="step-desc">
@@ -1150,7 +1201,7 @@
         </div>
       </div>
       <div class="workflow-step">
-        <span class="step-num">02</span>
+        <span class="step-num"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:4px" aria-hidden="true"><use href="#ic-gear"/></svg>02</span>
         <div class="step-content">
           <div class="step-title">配置 application.yml</div>
           <div class="step-desc">
@@ -1178,7 +1229,7 @@
         </div>
       </div>
       <div class="workflow-step">
-        <span class="step-num">03</span>
+        <span class="step-num"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:4px" aria-hidden="true"><use href="#ic-file"/></svg>03</span>
         <div class="step-content">
           <div class="step-title">注入 AmazonS3Template</div>
           <div class="step-desc">
@@ -1207,7 +1258,7 @@
         </div>
       </div>
       <div class="workflow-step">
-        <span class="step-num">04</span>
+        <span class="step-num"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:4px" aria-hidden="true"><use href="#ic-upload"/></svg>04</span>
         <div class="step-content">
           <div class="step-title">执行对象操作</div>
           <div class="step-desc">
@@ -1234,7 +1285,7 @@ s3.removeObjects(bucket, Arrays.asList(key1, key2, key3));</div>
         </div>
       </div>
       <div class="workflow-step">
-        <span class="step-num">05</span>
+        <span class="step-num"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:4px" aria-hidden="true"><use href="#ic-link"/></svg>05</span>
         <div class="step-content">
           <div class="step-title">生成访问链接</div>
           <div class="step-desc">
@@ -1252,7 +1303,7 @@ String custom = s3.getObjectUrl(bucket, key, 1, TimeUnit.HOURS, HttpMethod.DELET
         </div>
       </div>
       <div class="workflow-step">
-        <span class="step-num">06</span>
+        <span class="step-num"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:4px" aria-hidden="true"><use href="#ic-clock"/></svg>06</span>
         <div class="step-content">
           <div class="step-title">配置生命周期策略</div>
           <div class="step-desc">
@@ -1315,6 +1366,7 @@ s3.listVersions(prefix);</div>
   <!-- ============================ API REFERENCE ============================ -->
   <section class="section">
     <div class="section-header">
+      <svg class="icon icon-md icon-accent" style="margin-right:var(--space-sm)" aria-hidden="true"><use href="#ic-api"/></svg>
       <span class="section-number">[05]</span>
       <span class="section-line"></span>
     </div>
@@ -1339,31 +1391,31 @@ s3.listVersions(prefix);</div>
       </thead>
       <tbody>
         <tr>
-          <td>Bucket</td>
+          <td><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-bucket"/></svg>Bucket</td>
           <td>8</td>
           <td>createBucket / removeBucket / existBucket / getAllBuckets / setBucketPolicy</td>
           <td>存储桶 CRUD 与三种内置策略模板（READ_ONLY / WRITE_ONLY / READ_WRITE）</td>
         </tr>
         <tr>
-          <td>Object</td>
+          <td><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-object"/></svg>Object</td>
           <td>14</td>
           <td>putObject / getObject / removeObject / copyObject / renameObject / getAllObjectsByPrefix</td>
           <td>对象完整 CRUD，支持 InputStream / MultipartFile / byte[]，批量删除与范围读取</td>
         </tr>
         <tr>
-          <td>Presigned URL</td>
+          <td><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-link"/></svg>Presigned URL</td>
           <td>5</td>
           <td>getObjectUrl / getPresignedObjectPutUrl / getGatewayUrl</td>
           <td>GET/PUT 预签名 URL，自定义过期时间与 HTTP 方法，自定义域名网关</td>
         </tr>
         <tr>
-          <td>Multipart</td>
+          <td><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-upload"/></svg>Multipart</td>
           <td>6</td>
           <td>initiateMultipartUpload / uploadPart / completeMultipartUpload / abortMultipartUpload / listParts / listMultipartUploads</td>
           <td>大文件分片上传全流程，断点续传支持</td>
         </tr>
         <tr>
-          <td>Metadata &amp; Config</td>
+          <td><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-tag"/></svg>Metadata &amp; Config</td>
           <td>7</td>
           <td>getObjectMetadata / setObjectMetadata / enableBucketVersioning / setBucketLifecycleConfiguration / setBucketNotificationConfiguration</td>
           <td>元数据管理、版本控制、生命周期策略、事件通知配置</td>
@@ -1371,12 +1423,12 @@ s3.listVersions(prefix);</div>
       </tbody>
     </table>
 
-    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)">方法签名详情</p>
+    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-file"/></svg>方法签名详情</p>
     <p class="body-sm mb-lg">
       以下列出每个分组的核心方法完整签名。所有方法均提供默认 Bucket 重载版本（省略 bucket 参数时使用配置的默认 Bucket）。
     </p>
 
-    <p class="sub-heading" style="margin-top:0">存储桶管理</p>
+    <p class="sub-heading" style="margin-top:0"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-bucket"/></svg>存储桶管理</p>
     <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 创建存储桶 — 三种重载</span>
 Bucket createBucket(String bucketName)
 Bucket createBucket(String bucketName, String policyText)
@@ -1393,7 +1445,7 @@ Bucket getBucket(String bucketName)
 <span class="cm">// 策略配置</span>
 <span class="kw">void</span> setBucketPolicy(String bucketName, PolicyType policyType)</div>
 
-    <p class="sub-heading">对象操作</p>
+    <p class="sub-heading"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-object"/></svg>对象操作</p>
     <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 上传</span>
 PutObjectResult putObject(String objectName, InputStream stream)
 PutObjectResult putObject(String objectName, MultipartFile multipartFile, Map&lt;String, String&gt; metadata)
@@ -1418,7 +1470,7 @@ InputStream getObjectInputStream(String key, <span class="kw">long</span> start,
 Date getObjectLastModified(String key)
 ObjectListing getAllObjectsByPrefix(String prefix, String delimiter, Integer maxKeys)</div>
 
-    <p class="sub-heading">预签名 URL</p>
+    <p class="sub-heading"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-link"/></svg>预签名 URL</p>
     <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 生成公开 URL（需桶策略允许）</span>
 String getGatewayUrl(String objectName)
 
@@ -1431,7 +1483,7 @@ String getObjectUrl(String bucket, String objectName, <span class="kw">long</spa
 String getPresignedObjectPutUrl(String objectName)
 String getPresignedObjectPutUrl(String bucket, String objectName, <span class="kw">int</span> expireTime, TimeUnit timeUnit)</div>
 
-    <p class="sub-heading">分片上传</p>
+    <p class="sub-heading"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-upload"/></svg>分片上传</p>
     <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 初始化</span>
 String initiateMultipartUpload(String objectName, String contentType)
 
@@ -1444,7 +1496,7 @@ ListPartsResult listParts(String bucketName, String key, String uploadId)
 <span class="kw">void</span> abortMultipartUpload(String key, String uploadId)
 ListMultipartUploadsResult listMultipartUploads()</div>
 
-    <p class="sub-heading">元数据 & 配置</p>
+    <p class="sub-heading"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-tag"/></svg>元数据 & 配置</p>
     <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 元数据</span>
 ObjectMetadata getObjectMetadata(String key)
 <span class="kw">void</span> setObjectMetadata(String bucketName, String key, Map&lt;String, String&gt; metadata, String contentType)
@@ -1462,7 +1514,7 @@ BucketLifecycleConfiguration getBucketLifecycleConfiguration()
 <span class="kw">void</span> setBucketNotificationConfiguration(BucketNotificationConfiguration config)
 BucketNotificationConfiguration getBucketNotificationConfiguration()</div>
 
-    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)">内置策略模板</p>
+    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-shield"/></svg>内置策略模板</p>
     <p class="body-sm mb-lg">
       创建存储桶时可直接指定内置策略，无需手动编写 Policy JSON：
     </p>
@@ -1491,9 +1543,9 @@ s3.createBucket(<span class="str">"uploads"</span>, PolicyType.WRITE_ONLY);
 <span class="cm">// READ_WRITE — 完全公开（列出+读写）</span>
 s3.createBucket(<span class="str">"shared"</span>, PolicyType.READ_WRITE);</div>
 
-    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)">完整代码示例</p>
+    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)"><svg class="icon icon-sm icon-muted" style="vertical-align:-2px;margin-right:6px" aria-hidden="true"><use href="#ic-folder"/></svg>完整代码示例</p>
 
-    <p class="sub-heading">文件上传 REST 控制器</p>
+    <p class="sub-heading"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-upload"/></svg>文件上传 REST 控制器</p>
     <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 文件上传 — 接收 MultipartFile，返回 ETag 和访问 URL</span>
 <span class="kw">@RestController</span>
 <span class="kw">@RequestMapping</span>(<span class="str">"/files"</span>)
@@ -1534,7 +1586,7 @@ s3.createBucket(<span class="str">"shared"</span>, PolicyType.READ_WRITE);</div>
   }
 }</div>
 
-    <p class="sub-heading">分片上传完整流程</p>
+    <p class="sub-heading"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-grid"/></svg>分片上传完整流程</p>
     <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 1. 初始化分片上传，获取 UploadId</span>
 String uploadId = s3.initiateMultipartUpload(key, <span class="str">"application/octet-stream"</span>);
 
@@ -1554,7 +1606,7 @@ s3.completeMultipartUpload(key, uploadId, parts);
 <span class="cm">// 5. 查看进行中的分片任务</span>
 <span class="cm">// s3.listMultipartUploads();</span></div>
 
-    <p class="sub-heading">带元数据 + 自定义路径上传</p>
+    <p class="sub-heading"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-tag"/></svg>带元数据 + 自定义路径上传</p>
     <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 携带用户自定义元数据，按日期分目录存储</span>
 Map&lt;String, String&gt; meta = <span class="kw">new</span> HashMap&lt;&gt;();
 meta.put(<span class="str">"uploader"</span>, userId);
@@ -1573,7 +1625,7 @@ s3.putObject(key, file, meta);
 ObjectMetadata metadata = s3.getObjectMetadata(key);
 String uploader = metadata.getUserMetaDataOf(<span class="str">"uploader"</span>);</div>
 
-    <p class="sub-heading">异常处理最佳实践</p>
+    <p class="sub-heading"><svg class="icon icon-sm icon-muted" style="vertical-align:-3px;margin-right:6px" aria-hidden="true"><use href="#ic-shield"/></svg>异常处理最佳实践</p>
     <div class="code-block"><span class="cm">// 分别捕获服务端和客户端异常，精细化处理</span>
 <span class="kw">try</span> {
   S3Object obj = s3.getObject(key);
@@ -1595,6 +1647,7 @@ String uploader = metadata.getUserMetaDataOf(<span class="str">"uploader"</span>
   <!-- ============================ NOTES ============================ -->
   <section class="section">
     <div class="section-header">
+      <svg class="icon icon-md icon-accent" style="margin-right:var(--space-sm)" aria-hidden="true"><use href="#ic-shield"/></svg>
       <span class="section-number">[06]</span>
       <span class="section-line"></span>
     </div>
@@ -1605,7 +1658,7 @@ String uploader = metadata.getUserMetaDataOf(<span class="str">"uploader"</span>
 
     <div class="grid-2">
       <div>
-        <p class="sub-heading" style="margin-top:0">已知问题</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-warning" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-notification"/></svg>已知问题</p>
         <div class="code-block" style="margin-top:var(--space-sm);font-size:12px;padding:var(--space-md)">
 <span class="cm">// 1. stream.available() 不可靠</span>
 Content-Length 可能不准确，
@@ -1615,7 +1668,7 @@ Content-Length 可能不准确，
 多 Bucket 场景需自行管理多个
 AmazonS3Client 实例</div>
 
-        <p class="sub-heading mt-lg">架构限制</p>
+        <p class="sub-heading mt-lg"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-server"/></svg>架构限制</p>
         <ul class="reason-list">
           <li>无单元测试（<span class="inline-code-sec">src/test</span> 不存在）</li>
           <li>使用 AWS SDK v1，需迁移到 Jakarta 命名空间才支持 Spring Boot 3.x</li>
@@ -1623,7 +1676,7 @@ AmazonS3Client 实例</div>
         </ul>
       </div>
       <div>
-        <p class="sub-heading" style="margin-top:0">最佳实践</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-success" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-check"/></svg>最佳实践</p>
         <ul class="reason-list">
           <li>大文件使用分片上传，避免 OOM</li>
           <li>对外暴露下载链接使用预签名 URL + 短过期时间</li>
@@ -1637,14 +1690,14 @@ AmazonS3Client 实例</div>
           <li>使用 <span class="inline-code-sec">getObjectInputStream(key, start, end)</span> 实现范围读取</li>
         </ul>
 
-        <p class="sub-heading mt-lg">版本历史</p>
+        <p class="sub-heading mt-lg"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-clock"/></svg>版本历史</p>
         <div class="code-block" style="font-size:12px;padding:var(--space-md)">
 <span class="val">0.0.3</span>  <span class="cm">当前版本 — 生产可用，核心功能完整</span>
 <span class="dim">0.0.1</span>  <span class="cm">初始版本 — 基础框架搭建，基础 API</span></div>
       </div>
     </div>
 
-    <p class="sub-heading mt-lg">异常处理参考</p>
+    <p class="sub-heading mt-lg"><svg class="icon icon-md icon-muted" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-shield"/></svg>异常处理参考</p>
     <div class="code-block"><span class="kw">try</span> {
   s3.getObject(key);
 } <span class="kw">catch</span> (AmazonServiceException e) {
@@ -1659,6 +1712,7 @@ AmazonS3Client 实例</div>
   <!-- ============================ FAQ ============================ -->
   <section class="section">
     <div class="section-header">
+      <svg class="icon icon-md icon-accent" style="margin-right:var(--space-sm)" aria-hidden="true"><use href="#ic-question"/></svg>
       <span class="section-number">[07]</span>
       <span class="section-line"></span>
     </div>
@@ -1669,7 +1723,7 @@ AmazonS3Client 实例</div>
 
     <div style="display:flex;flex-direction:column;gap:var(--space-md);max-width:900px">
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 这个 Starter 是否支持 AWS S3 之外的存储服务？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 这个 Starter 是否支持 AWS S3 之外的存储服务？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 支持。所有兼容 S3 协议的对象存储服务均可使用，包括 MinIO、阿里云 OSS、腾讯云 COS、
           华为云 OBS、七牛云 Kodo、DigitalOcean Spaces 等。只需修改
@@ -1679,7 +1733,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 为什么 AWS SDK v1 而不是 v2？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 为什么 AWS SDK v1 而不是 v2？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 项目基于 Spring Boot 2.6.11（Java 8），SDK v1 提供更稳定的兼容性。
           如需使用 SDK v2，可参考 <span class="inline-code-sec">AmazonS3Template</span> 的封装思路自行迁移。
@@ -1689,7 +1743,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 如何配置多个 Bucket？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 如何配置多个 Bucket？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 当前版本配置只支持一个默认 Bucket。多 Bucket 场景可通过以下方式实现：
           1）所有需要指定 Bucket 的方法都提供了带 <span class="inline-code-sec">bucketName</span> 参数的重载版本；
@@ -1699,7 +1753,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 生产环境推荐使用 HTTPS 吗？如何配置？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 生产环境推荐使用 HTTPS 吗？如何配置？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 强烈推荐。在 <span class="inline-code-sec">application.yml</span> 中将
           <span class="inline-code-sec">winter-aws.protocol</span> 设为
@@ -1711,7 +1765,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 文件上传报 Connection timed out 怎么办？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 文件上传报 Connection timed out 怎么办？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 常见原因及解决方案：1）确认 endpoint 地址正确且网络可达；
           2）防火墙/安全组是否放行了对应端口；3）MinIO 默认使用 9000 端口，确认服务已启动；
@@ -1722,7 +1776,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 如何调整 maxConnections 等连接参数？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 如何调整 maxConnections 等连接参数？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 在 <span class="inline-code-sec">application.yml</span> 中配置即可：
           <span class="inline-code-sec">winter-aws.max-connections</span>（默认 500）、
@@ -1734,7 +1788,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 大文件上传如何避免 OOM？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 大文件上传如何避免 OOM？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 推荐使用分片上传（Multipart Upload）处理大文件：1）调用
           <span class="inline-code-sec">initiateMultipartUpload</span> 获取 UploadId；
@@ -1745,7 +1799,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 如何调试 S3 请求？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 如何调试 S3 请求？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> AWS SDK v1 支持通过系统属性或
           <span class="inline-code-sec">ClientConfiguration</span> 开启请求/响应日志：
@@ -1759,7 +1813,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 如何将文件列表分页？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 如何将文件列表分页？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 使用
           <span class="inline-code-sec">getAllObjectsByPrefix(prefix, delimiter, maxKeys)</span>
@@ -1771,7 +1825,7 @@ AmazonS3Client 实例</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
-        <p class="sub-heading" style="margin-top:0">Q: 是否支持 Spring Boot 3.x？</p>
+        <p class="sub-heading" style="margin-top:0"><svg class="icon icon-md icon-accent" style="vertical-align:-4px;margin-right:8px" aria-hidden="true"><use href="#ic-question"/></svg>Q: 是否支持 Spring Boot 3.x？</p>
         <p class="body-sm" style="color:var(--text-primary)">
           <span style="color:var(--success);font-weight:500">A:</span> 当前版本基于 Spring Boot 2.6.11 和 Java 8，使用 javax 命名空间，不直接兼容
           Spring Boot 3.x（jakarta 命名空间）。如需迁移至 Spring Boot 3.x，需要：1）将
@@ -1790,8 +1844,8 @@ AmazonS3Client 实例</div>
       <span class="caption">Apache 2.0 &middot; Java 8+ &middot; Spring Boot 2.6.11 &middot; AWS SDK 1.12.709</span>
     </div>
     <div class="flex gap-md" style="gap:var(--space-md)">
-      <a href="https://github.com/hahaha-zsq/winter-minio-spring-boot-starter" target="_blank">GitHub</a>
-      <a href="https://central.sonatype.com/artifact/io.github.hahaha-zsq/winter-minio-spring-boot-starter" target="_blank">Maven 中央仓库</a>
+      <a href="https://github.com/hahaha-zsq/winter-minio-spring-boot-starter" target="_blank"><svg class="icon icon-sm" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"><use href="#ic-github"/></svg>GitHub</a>
+      <a href="https://central.sonatype.com/artifact/io.github.hahaha-zsq/winter-minio-spring-boot-starter" target="_blank"><svg class="icon icon-sm" style="vertical-align:-2px;margin-right:4px" aria-hidden="true"><use href="#ic-download"/></svg>Maven 中央仓库</a>
     </div>
   </footer>
 </body>
