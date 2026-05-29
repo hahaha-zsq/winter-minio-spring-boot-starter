@@ -1,0 +1,1798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Winter MinIO — Spring Boot 启动器</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@400..700&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --black: #000000;
+      --surface: #111111;
+      --surface-raised: #1A1A1A;
+      --border: #222222;
+      --border-visible: #333333;
+      --text-disabled: #666666;
+      --text-secondary: #999999;
+      --text-primary: #E8E8E8;
+      --text-display: #FFFFFF;
+      --accent: #D71921;
+      --accent-subtle: rgba(215,25,33,0.15);
+      --success: #4A9E5C;
+      --warning: #D4A843;
+      --interactive: #5B9BF6;
+
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-2xl: 48px;
+      --space-3xl: 64px;
+      --space-4xl: 96px;
+
+      --font-display: 'Doto', 'Space Mono', monospace;
+      --font-body: 'Space Grotesk', 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'Space Mono', 'JetBrains Mono', 'SF Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .dot-grid {
+      background-image: radial-gradient(circle, var(--border) 0.5px, transparent 0.5px);
+      background-size: 16px 16px;
+    }
+
+    .label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    .caption {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--text-secondary);
+    }
+
+    .body-text {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .body-sm {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .inline-code {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent);
+      background: var(--accent-subtle);
+      padding: 1px 6px;
+      border-radius: 2px;
+    }
+
+    .inline-code-sec {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-lg) var(--space-2xl);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-display);
+    }
+
+    .nav-brand .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: var(--space-sm);
+      vertical-align: middle;
+    }
+
+    .nav-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-disabled);
+    }
+
+    .nav-meta span { margin-left: var(--space-md); }
+
+    .hero {
+      padding: var(--space-4xl) var(--space-2xl) var(--space-3xl);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(circle, var(--border) 0.5px, transparent 0.5px);
+      background-size: 16px 16px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--text-display);
+      margin-bottom: var(--space-lg);
+      position: relative;
+    }
+
+    .hero-title .accent-dot {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-left: var(--space-sm);
+      vertical-align: middle;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 1.4;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin-bottom: var(--space-xl);
+      position: relative;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: var(--space-2xl);
+      position: relative;
+    }
+
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .hero-stat-value {
+      font-family: var(--font-mono);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.0;
+      color: var(--text-display);
+      letter-spacing: -0.02em;
+    }
+
+    .hero-stat-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-disabled);
+    }
+
+    .section {
+      padding: var(--space-3xl) var(--space-2xl);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-of-type { border-bottom: none; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+
+    .section-header .section-number {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-disabled);
+      letter-spacing: 0.04em;
+    }
+
+    .section-header .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text-display);
+      margin-bottom: var(--space-lg);
+    }
+
+    .section-title .label-prefix {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      display: block;
+      margin-bottom: var(--space-sm);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xl);
+    }
+
+    @media (max-width: 768px) {
+      .overview-grid { grid-template-columns: 1fr; }
+    }
+
+    .overview-highlight {
+      font-family: var(--font-body);
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--text-display);
+      margin-bottom: var(--space-md);
+    }
+
+    .sub-heading {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-display);
+      margin-top: var(--space-lg);
+      margin-bottom: var(--space-sm);
+    }
+
+    .reason-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-sm) 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .reason-list li {
+      padding-left: var(--space-md);
+      position: relative;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .reason-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--text-disabled);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+    }
+
+    @media (max-width: 900px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      transition: border-color 200ms ease-out;
+    }
+
+    .feature-card:hover { border-color: var(--border-visible); }
+
+    .feature-card .card-number {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-disabled);
+    }
+
+    .feature-card .card-title {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-display);
+    }
+
+    .feature-card .card-desc {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .feature-card .card-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-disabled);
+      border: 1px solid var(--border-visible);
+      border-radius: 999px;
+      padding: 2px 10px;
+      align-self: flex-start;
+      margin-top: var(--space-xs);
+    }
+
+    .pipeline {
+      margin: var(--space-xl) 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    .pipeline-node {
+      background: var(--surface);
+      border: 1px solid var(--border-visible);
+      border-radius: 4px;
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.02em;
+      color: var(--text-secondary);
+      text-align: center;
+      flex: 0 1 auto;
+    }
+
+    .pipeline-arrow {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--text-disabled);
+      display: flex;
+      align-items: center;
+    }
+
+    .pipeline-node.accent {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .pipeline-desc {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 780px;
+      margin-bottom: var(--space-lg);
+    }
+
+    .arch-tree {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 2.0;
+      color: var(--text-primary);
+      padding: var(--space-lg);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .arch-tree .hl { color: var(--accent); }
+    .arch-tree .dim { color: var(--text-disabled); }
+    .arch-tree .sec { color: var(--text-secondary); }
+
+    .bean-order {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      align-items: center;
+      margin: var(--space-md) 0 var(--space-xl);
+    }
+
+    .bean-order-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: var(--space-xs) var(--space-sm);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: 0.02em;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    .bean-order-item.highlight {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .bean-order-arrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-disabled);
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      margin: var(--space-sm) 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .flow-row .flow-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-disabled);
+      flex-shrink: 0;
+    }
+
+    .flow-row .flow-dot.accent { background: var(--accent); }
+    .flow-row .flow-dot.success { background: var(--success); }
+
+    .flow-row .flow-label {
+      color: var(--text-disabled);
+      min-width: 36px;
+      flex-shrink: 0;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+
+    @media (max-width: 700px) {
+      .config-grid { grid-template-columns: 1fr; }
+    }
+
+    .config-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .config-card .config-name {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-display);
+    }
+
+    .config-card .config-setting {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--success);
+    }
+
+    .config-card .config-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text-secondary);
+    }
+
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: var(--space-md) var(--space-lg);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      overflow-x: auto;
+      white-space: pre;
+      margin: var(--space-sm) 0 var(--space-lg);
+    }
+
+    .code-block .cm { color: var(--text-disabled); }
+    .code-block .kw { color: var(--accent); }
+    .code-block .str { color: var(--success); }
+    .code-block .val { color: var(--text-primary); }
+    .code-block .sec { color: var(--text-secondary); }
+
+    .workflow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+      max-width: 780px;
+    }
+
+    .workflow-step {
+      display: flex;
+      gap: var(--space-md);
+      align-items: flex-start;
+    }
+
+    .workflow-step .step-num {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-disabled);
+      min-width: 32px;
+      line-height: 1.6;
+      flex-shrink: 0;
+    }
+
+    .workflow-step .step-content { flex: 1; }
+
+    .workflow-step .step-title {
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-display);
+    }
+
+    .workflow-step .step-desc {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-top: var(--space-xs);
+    }
+
+    .ext-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .ext-table th {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: 1px solid var(--border-visible);
+      font-weight: 400;
+    }
+
+    .ext-table td {
+      font-family: var(--font-body);
+      font-weight: 300;
+      color: var(--text-primary);
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .ext-table td:first-child {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-display);
+      white-space: nowrap;
+    }
+
+    .ext-table td:nth-child(2) {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .ext-table tr:last-child td { border-bottom: none; }
+
+    @media (max-width: 700px) {
+      .ext-table, .ext-table thead, .ext-table tbody, .ext-table tr, .ext-table th, .ext-table td { display: block; }
+      .ext-table thead { display: none; }
+      .ext-table td { padding: var(--space-sm) var(--space-md); border-bottom: none; }
+      .ext-table td::before {
+        content: attr(data-label);
+        font-family: var(--font-mono);
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-disabled);
+        display: block;
+        margin-bottom: 2px;
+      }
+      .ext-table tr {
+        border-bottom: 1px solid var(--border);
+        padding: var(--space-md) 0;
+      }
+    }
+
+    .footer {
+      padding: var(--space-xl) var(--space-2xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+
+    .footer .label { color: var(--text-disabled); }
+
+    .footer a {
+      color: var(--interactive);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .footer a:hover { color: var(--text-display); }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--border-visible); border-radius: 3px; }
+
+    .mt-lg { margin-top: var(--space-lg); }
+    .mb-lg { margin-bottom: var(--space-lg); }
+    .mb-xl { margin-bottom: var(--space-xl); }
+    .gap-md { gap: var(--space-md); }
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .gap-xs { gap: var(--space-xs); }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
+    @media (max-width: 700px) { .grid-2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- ============================ NAV ============================ -->
+  <nav class="nav">
+    <div class="nav-brand">
+      <span class="dot"></span>WINTER MINIO
+    </div>
+    <div class="nav-meta">
+      <span>v0.0.3</span>
+      <span>apache 2.0</span>
+    </div>
+  </nav>
+
+  <!-- ============================ HERO ============================ -->
+  <header class="hero">
+    <h1 class="hero-title">
+      WINTER MINIO<span class="accent-dot"></span>
+    </h1>
+    <p class="hero-tagline">
+      零配置地将 S3 兼容对象存储嵌入任意 Spring Boot 应用。
+      基于 AWS SDK v1，80+ API 开箱即用。
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-value">4</span>
+        <span class="hero-stat-label">Java 源文件</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">80+</span>
+        <span class="hero-stat-label">API 接口</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">6+</span>
+        <span class="hero-stat-label">兼容服务</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">3</span>
+        <span class="hero-stat-label">策略模板</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value">6</span>
+        <span class="hero-stat-label">分片接口</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================ OVERVIEW ============================ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">[01]</span>
+      <span class="section-line"></span>
+    </div>
+    <h2 class="section-title">
+      <span class="label-prefix">/ 项目简介</span>
+      概述
+    </h2>
+    <div class="overview-grid">
+      <div>
+        <p class="overview-highlight">
+          将 S3 兼容对象存储零配置地嵌入 Spring Boot 应用的启动器，
+          一行依赖即可操作任意 S3 服务。
+        </p>
+        <p class="body-text">
+          基于 Spring Boot 2.6.11 与 AWS SDK for Java v1.12.709 构建，
+          提供开箱即用的 <span class="inline-code">AmazonS3Template</span>。
+          仅需添加 Maven 依赖并配置 <span class="inline-code">winter-aws.*</span>
+          属性 — 即可开始上传、下载、管理对象和存储桶。
+        </p>
+        <p class="body-text mt-lg">
+          全面封装 S3 协议操作：存储桶管理、对象 CRUD、预签名 URL、
+          分片上传、元数据管理、版本控制、生命周期和事件通知配置。
+          兼容 MinIO、AWS S3、阿里云 OSS、腾讯云 COS、华为云 OBS、七牛云 Kodo。
+        </p>
+        <div class="sub-heading">为什么选择 Winter MinIO</div>
+        <ul class="reason-list">
+          <li>传统方式通过 AWS SDK 操作 S3 需要编写大量样板代码：客户端构造、连接池配置、异常处理等。</li>
+          <li>本 Starter 通过 Auto-Configuration 自动化这一切，一行配置即可获得完全配置的 AmazonS3 客户端。</li>
+          <li>Template 模式封装 80+ 常用操作，覆盖日常 95% 以上的 S3 使用场景。</li>
+          <li>内置三种存储桶策略模板（只读/只写/读写），无需手动编写复杂的 JSON Policy。</li>
+          <li>支持 Path-Style 与 Virtual-Hosted 双模式，一套代码切换私有部署和公有云。</li>
+        </ul>
+      </div>
+      <div>
+        <div class="flex flex-col gap-md">
+          <div>
+            <span class="label" style="display:block;margin-bottom:var(--space-xs)">Java 版本</span>
+            <span style="font-family:var(--font-mono);font-size:24px;font-weight:700;color:var(--text-display);">1.8</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-disabled);margin-left:var(--space-sm);">+ 兼容</span>
+          </div>
+          <div>
+            <span class="label" style="display:block;margin-bottom:var(--space-xs)">Maven 中央仓库</span>
+            <a href="https://central.sonatype.com/artifact/io.github.hahaha-zsq/winter-minio-spring-boot-starter" target="_blank" style="font-family:var(--font-mono);font-size:14px;font-weight:400;color:var(--text-secondary);text-decoration:none;display:block;line-height:1.6;">
+              io.github.hahaha-zsq<br/>
+              <span style="color:var(--text-disabled);font-size:12px;">winter-minio-spring-boot-starter</span>
+            </a>
+            <div class="code-block" style="margin-top:var(--space-sm);margin-bottom:0;padding:var(--space-sm) var(--space-md);font-size:12px;"><span class="cm">&lt;dependency&gt;</span>
+  <span class="kw">&lt;groupId&gt;</span>io.github.hahaha-zsq<span class="kw">&lt;/groupId&gt;</span>
+  <span class="kw">&lt;artifactId&gt;</span>winter-minio-spring-boot-starter<span class="kw">&lt;/artifactId&gt;</span>
+  <span class="kw">&lt;version&gt;</span><span class="val">0.0.3</span><span class="kw">&lt;/version&gt;</span>
+<span class="cm">&lt;/dependency&gt;</span></div>
+          </div>
+          <div>
+            <span class="label" style="display:block;margin-bottom:var(--space-xs)">开源协议</span>
+            <span style="font-family:var(--font-mono);font-size:16px;font-weight:400;color:var(--text-secondary);">Apache 2.0</span>
+          </div>
+          <div>
+            <span class="label" style="display:block;margin-bottom:var(--space-xs)">代码仓库</span>
+            <span style="font-family:var(--font-mono);font-size:14px;font-weight:400;color:var(--interactive);">github.com/hahaha-zsq</span>
+          </div>
+          <div>
+            <span class="label" style="display:block;margin-bottom:var(--space-xs)">Spring Boot</span>
+            <span style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--text-display);">2.6.11</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-disabled);margin-left:var(--space-sm);">AWS SDK 1.12.709</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FEATURES ============================ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">[02]</span>
+      <span class="section-line"></span>
+    </div>
+    <h2 class="section-title">
+      <span class="label-prefix">/ 核心能力</span>
+      特性
+    </h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="card-number">01</span>
+        <span class="card-title">存储桶全生命周期管理</span>
+        <span class="card-desc">创建、删除、检查存储桶是否存在。内置三种策略模板（READ_ONLY / WRITE_ONLY / READ_WRITE），自动生成标准 S3 Policy JSON，无需手写策略文档。</span>
+        <span class="card-tag">核心</span>
+      </div>
+      <div class="feature-card">
+        <span class="card-number">02</span>
+        <span class="card-title">对象 CRUD 与批量操作</span>
+        <span class="card-desc">上传（InputStream / MultipartFile / byte[]）、下载（S3Object / InputStream / 本地文件）、删除、复制、重命名、批量删除。支持前缀列举和分页查询。</span>
+        <span class="card-tag">核心</span>
+      </div>
+      <div class="feature-card">
+        <span class="card-number">03</span>
+        <span class="card-title">预签名 URL 生成</span>
+        <span class="card-desc">生成带过期时间的 GET / PUT / DELETE 预签名 URL。支持自定义过期时间（秒/分/时）、自定义 HTTP 方法、自定义域名网关 URL，适合前端直传和临时分享。</span>
+        <span class="card-tag">网络</span>
+      </div>
+      <div class="feature-card">
+        <span class="card-number">04</span>
+        <span class="card-title">分片上传与大文件支持</span>
+        <span class="card-desc">初始化分片上传、逐个上传分片、列出已上传分片、完成或中止分片。适用于大文件场景，避免 OOM。列出所有进行中的分片任务。</span>
+        <span class="card-tag">核心</span>
+      </div>
+      <div class="feature-card">
+        <span class="card-number">05</span>
+        <span class="card-title">元数据管理与版本控制</span>
+        <span class="card-desc">获取/设置对象的自定义元数据（Content-Type、用户自定义键值对）。启用/禁用存储桶版本控制，列出所有版本历史，追踪文件变更。</span>
+        <span class="card-tag">管理</span>
+      </div>
+      <div class="feature-card">
+        <span class="card-number">06</span>
+        <span class="card-title">生命周期与事件通知</span>
+        <span class="card-desc">配置存储桶生命周期规则（过期天数、迁移到 Glacier）。设置存储桶事件通知（对象创建/删除事件），支持 SNS、SQS、Lambda 目标。</span>
+        <span class="card-tag">管理</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ ARCHITECTURE ============================ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">[03]</span>
+      <span class="section-line"></span>
+    </div>
+    <h2 class="section-title">
+      <span class="label-prefix">/ 架构设计</span>
+      架构
+    </h2>
+
+    <p class="sub-heading" style="margin-top:0">自动装配流水线</p>
+    <p class="pipeline-desc">
+      Spring Boot 启动时，Auto-Configuration 按以下顺序依次创建并装配各组件。
+      标记红色的为可替换 Bean —— 开发者可通过 <span class="inline-code-sec">@Bean</span>
+      提供自定义实现覆盖默认。
+    </p>
+    <div class="pipeline">
+      <span class="pipeline-node">Properties</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-node">ClientConfig</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-node">AmazonS3</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-node accent">S3Template</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-node">CommandRunner</span>
+    </div>
+
+    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)">各组件职责</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-sm);margin-bottom:var(--space-xl)">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-sm) var(--space-md)">
+        <span class="caption" style="display:block;color:var(--text-display)">AmazonS3Properties</span>
+        <span class="body-sm">@ConfigurationProperties(prefix="winter-aws")，绑定 accessKey、secretKey、endpoint、bucket、region、pathStyleAccess、customDomain</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-sm) var(--space-md)">
+        <span class="caption" style="display:block;color:var(--text-display)">ClientConfiguration</span>
+        <span class="body-sm">通过 Properties 驱动的传输参数：maxConnections、socketTimeout、connectionTimeout、maxErrorRetry。均为可配置项，支持 application.yml 自定义</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-sm) var(--space-md)">
+        <span class="caption" style="display:block;color:var(--text-display)">AmazonS3 Client</span>
+        <span class="body-sm">通过 AmazonS3ClientBuilder 构建，支持 path-style 与 virtual-hosted 双模式。执行实际的 S3 REST API 调用</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-sm) var(--space-md)">
+        <span class="caption" style="display:block;color:var(--accent)">AmazonS3Template</span>
+        <span class="body-sm">核心门面类，封装 80+ 操作方法。基于 @ConditionalOnMissingBean，可被用户自定义 Bean 替换</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-sm) var(--space-md);grid-column:1/-1">
+        <span class="caption" style="display:block;color:var(--text-display)">BucketInitCommandLineRunner</span>
+        <span class="body-sm">应用启动后检查默认 Bucket 是否存在，不存在则自动创建（配置 createBucketOnStartup=true）。日志输出 bucket 信息便于验证</span>
+      </div>
+    </div>
+
+    <p class="sub-heading">自动装配时序</p>
+    <p class="pipeline-desc">
+      每一步判断条件是否满足，条件不满足则跳过对应的 Bean 创建：
+    </p>
+    <div class="pipeline" style="margin-top:var(--space-sm)">
+      <span class="pipeline-node">@ConditionalOnProperty</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-node">@EnableConfigurationProperties</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-node">@ConditionalOnMissingBean</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-node">@ConditionalOnBean</span>
+      <span class="pipeline-arrow">&rarr;</span>
+      <span class="pipeline-node">@Bean init/destroy</span>
+    </div>
+
+    <div class="grid-2" style="margin-top:var(--space-xl)">
+      <div>
+        <p class="sub-heading" style="margin-top:0">组件依赖树</p>
+        <div class="arch-tree"><span class="hl">AmazonS3AutoConfiguration</span>
+├── <span class="sec">AmazonS3Properties</span>
+│   ├── accessKey         <span class="dim">(必填)</span>
+│   ├── secretKey         <span class="dim">(必填)</span>
+│   ├── endpoint          <span class="dim">(必填)</span>
+│   ├── bucket            <span class="dim">(必填)</span>
+│   ├── region            <span class="dim">= AP_EAST_1</span>
+│   ├── pathStyleAccess   <span class="dim">= true</span>
+│   ├── protocol          <span class="dim">= http</span>
+│   ├── maxConnections    <span class="dim">= 500</span>
+│   ├── socketTimeout     <span class="dim">= 20000ms</span>
+│   ├── connectionTimeout <span class="dim">= 10000ms</span>
+│   ├── maxErrorRetry     <span class="dim">= 2</span>
+│   └── customDomain      <span class="dim">(可选)</span>
+│
+├── <span class="hl">AmazonS3Client</span>          <span class="dim">← 可替换</span>
+│   ├── ClientConfiguration
+│   │   ├── maxConnections    <span class="dim">(可配，默认 500)</span>
+│   │   ├── socketTimeout     <span class="dim">(可配，默认 20000ms)</span>
+│   │   ├── connectionTimeout <span class="dim">(可配，默认 10000ms)</span>
+│   │   ├── maxErrorRetry     <span class="dim">(可配，默认 2)</span>
+│   │   └── protocol          <span class="dim">(配置 https 时自动选 Protocol.HTTPS)</span>
+│   └── AwsClientBuilder.EndpointConfiguration
+│
+└── <span class="hl accent">AmazonS3Template</span>        <span class="dim">← 可替换</span>
+    ├── Bucket Operations   <span class="dim">(8)</span>
+    ├── Object Operations   <span class="dim">(14)</span>
+    ├── Presigned URL       <span class="dim">(5)</span>
+    ├── Multipart Upload    <span class="dim">(6)</span>
+    └── Metadata &amp; Lifecycle <span class="dim">(7)</span></div>
+      </div>
+      <div>
+        <p class="sub-heading" style="margin-top:0">Bean 加载顺序</p>
+        <p class="body-sm mb-lg">
+          Starter 按照严格的依赖顺序注册 Bean，
+          后置 Bean 依赖前置 Bean 的存在：
+        </p>
+        <div class="bean-order">
+          <span class="bean-order-item highlight">Properties</span>
+          <span class="bean-order-arrow">&rarr;</span>
+          <span class="bean-order-item">ClientConfig</span>
+          <span class="bean-order-arrow">&rarr;</span>
+          <span class="bean-order-item">AmazonS3</span>
+          <span class="bean-order-arrow">&rarr;</span>
+          <span class="bean-order-item highlight">S3Template</span>
+          <span class="bean-order-arrow">&rarr;</span>
+          <span class="bean-order-item">BucketInit</span>
+        </div>
+
+        <p class="sub-heading">文件上传生命周期</p>
+        <p class="body-sm mb-lg">
+          一次完整的文件上传请求经过以下层级：
+        </p>
+        <div class="flow-row">
+          <span class="flow-dot accent"></span>
+          <span class="flow-label">01</span>
+          <span>Controller 接收 MultipartFile</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot"></span>
+          <span class="flow-label">02</span>
+          <span>AmazonS3Template.putObject() 调用</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot"></span>
+          <span class="flow-label">03</span>
+          <span>PutObjectRequest 构建（含元数据）</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot success"></span>
+          <span class="flow-label">04</span>
+          <span>AmazonS3.putObject() SDK 调用</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot success"></span>
+          <span class="flow-label">05</span>
+          <span>返回 PutObjectResult（ETag）</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot accent"></span>
+          <span class="flow-label">06</span>
+          <span>生成访问 URL / 预签名 URL</span>
+        </div>
+
+        <p class="sub-heading mt-lg">文件下载生命周期</p>
+        <p class="body-sm mb-lg">
+          流式下载请求经过以下层级，避免将大文件加载到内存：
+        </p>
+        <div class="flow-row">
+          <span class="flow-dot accent"></span>
+          <span class="flow-label">01</span>
+          <span>Controller 接收下载请求（key 参数）</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot"></span>
+          <span class="flow-label">02</span>
+          <span>AmazonS3Template.getObject() 调用</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot"></span>
+          <span class="flow-label">03</span>
+          <span>S3Object 返回，包含 ObjectMetadata + 内容流</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot success"></span>
+          <span class="flow-label">04</span>
+          <span>ResponseEntity&lt;StreamingResponseBody&gt; 包装流</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot success"></span>
+          <span class="flow-label">05</span>
+          <span>StreamingResponseBody 逐块写入 OutputStream</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-dot success"></span>
+          <span class="flow-label">06</span>
+          <span>Stream 自动关闭，资源释放</span>
+        </div>
+
+        <p class="sub-heading mt-lg">配置场景</p>
+        <div class="config-grid" style="margin-top:var(--space-sm)">
+          <div class="config-card">
+            <span class="config-name">MinIO 本地开发</span>
+            <span class="config-setting">path-style-access: true</span>
+            <span class="config-desc">http://localhost:9000/bucket/key。本地测试推荐，无需 TLS</span>
+          </div>
+          <div class="config-card">
+            <span class="config-name">AWS S3 生产</span>
+            <span class="config-setting">path-style-access: false</span>
+            <span class="config-desc">https://bucket.s3.region.amazonaws.com/key。云原生首选</span>
+          </div>
+          <div class="config-card">
+            <span class="config-name">阿里云 OSS</span>
+            <span class="config-setting">path-style-access: false</span>
+            <span class="config-desc">https://bucket.oss-cn-hangzhou.aliyuncs.com。华东节点</span>
+          </div>
+          <div class="config-card">
+            <span class="config-name">腾讯云 COS</span>
+            <span class="config-setting">path-style-access: false</span>
+            <span class="config-desc">https://bucket.cos.ap-guangzhou.myqcloud.com。广州节点</span>
+          </div>
+          <div class="config-card">
+            <span class="config-name">华为云 OBS</span>
+            <span class="config-setting">path-style-access: false</span>
+            <span class="config-desc">https://bucket.obs.cn-north-4.myhuaweicloud.com。华北节点</span>
+          </div>
+          <div class="config-card">
+            <span class="config-name">七牛云 Kodo</span>
+            <span class="config-setting">path-style-access: false</span>
+            <span class="config-desc">https://bucket.s3-cn-east-1.qiniucs.com。华东节点</span>
+          </div>
+          <div class="config-card">
+            <span class="config-name">自定义域名</span>
+            <span class="config-setting">custom-domain + path-style</span>
+            <span class="config-desc">https://cdn.example.com/bucket/key。隐藏 S3 端点</span>
+          </div>
+          <div class="config-card">
+            <span class="config-name">Nginx 反向代理</span>
+            <span class="config-setting">path-style-access: true</span>
+            <span class="config-desc">https://s3.internal.company.com/bucket/key。内网中转</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ WORKFLOW ============================ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">[04]</span>
+      <span class="section-line"></span>
+    </div>
+    <h2 class="section-title">
+      <span class="label-prefix">/ 使用指南</span>
+      工作流
+    </h2>
+
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <span class="step-num">01</span>
+        <div class="step-content">
+          <div class="step-title">添加 Maven 依赖</div>
+          <div class="step-desc">
+            在 <span class="inline-code-sec">pom.xml</span> 中加入 dependency。
+            已发布至 Maven Central，无需配置额外仓库。
+            <div class="code-block"><span class="cm">&lt;!-- pom.xml --&gt;</span>
+&lt;dependency&gt;
+  &lt;groupId&gt;io.github.hahaha-zsq&lt;/groupId&gt;
+  &lt;artifactId&gt;winter-minio-spring-boot-starter&lt;/artifactId&gt;
+  &lt;version&gt;0.0.3&lt;/version&gt;
+&lt;/dependency&gt;</div>
+          </div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <span class="step-num">02</span>
+        <div class="step-content">
+          <div class="step-title">配置 application.yml</div>
+          <div class="step-desc">
+            四项必填参数：<span class="inline-code-sec">access-key</span>、
+            <span class="inline-code-sec">secret-key</span>、
+            <span class="inline-code-sec">endpoint</span>、
+            <span class="inline-code-sec">bucket</span>。
+            生产环境推荐使用 <span class="inline-code-sec">${ENV_VAR}</span> 环境变量注入密钥。
+            <div class="code-block"><span class="cm"># application.yml — 完整配置参考</span>
+<span class="kw">winter-aws</span>:
+  <span class="kw">access-key</span>: <span class="str">${AWS_ACCESS_KEY}</span>
+  <span class="kw">secret-key</span>: <span class="str">${AWS_SECRET_KEY}</span>
+  <span class="kw">endpoint</span>: <span class="str">http://localhost:9000</span>
+  <span class="kw">bucket</span>: <span class="str">my-bucket</span>
+  <span class="cm"># region: AP_EAST_1</span>
+  <span class="cm"># protocol: http</span>
+  <span class="cm"># path-style-access: true</span>
+  <span class="cm"># max-connections: 500</span>
+  <span class="cm"># socket-timeout: 20000</span>
+  <span class="cm"># connection-timeout: 10000</span>
+  <span class="cm"># max-error-retry: 2</span>
+  <span class="cm"># custom-domain: https://cdn.example.com</span>
+  <span class="cm"># enabled: true</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <span class="step-num">03</span>
+        <div class="step-content">
+          <div class="step-title">注入 AmazonS3Template</div>
+          <div class="step-desc">
+            在任意 <span class="inline-code-sec">@Service</span> 或
+            <span class="inline-code-sec">@RestController</span> 中
+            <span class="inline-code-sec">@Autowired</span> 注入
+            <span class="inline-code-sec">AmazonS3Template</span>。
+            Starter 自动创建并管理其生命周期。
+            <div class="code-block"><span class="cm">// 构造器注入示例</span>
+<span class="kw">@Service</span>
+<span class="kw">public class</span> FileService {
+
+  <span class="kw">private final</span> AmazonS3Template s3;
+
+  <span class="kw">public</span> FileService(AmazonS3Template s3) {
+    <span class="kw">this</span>.s3 = s3;
+  }
+
+  <span class="kw">public</span> String upload(MultipartFile file) {
+    String key = <span class="str">"uploads/"</span> + file.getOriginalFilename();
+    s3.putObject(key, file, <span class="kw">null</span>);
+    <span class="kw">return</span> s3.getGatewayUrl(key);
+  }
+}</div>
+          </div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <span class="step-num">04</span>
+        <div class="step-content">
+          <div class="step-title">执行对象操作</div>
+          <div class="step-desc">
+            调用核心 API 完成文件的上传、下载、删除、复制。
+            支持 MultipartFile、InputStream、byte[] 多种输入方式。
+            <div class="code-block"><span class="cm">// 上传 + 下载 + 删除一览</span>
+<span class="cm">// 上传 (InputStream)</span>
+s3.putObject(key, inputStream);
+<span class="cm">// 上传 (MultipartFile + 元数据)</span>
+s3.putObject(key, multipartFile, metadata);
+<span class="cm">// 上传 (byte[] + Content-Type)</span>
+s3.putObject(key, bytes, <span class="str">"image/png"</span>);
+<span class="cm">// 下载 (返回 S3Object)</span>
+S3Object obj = s3.getObject(key);
+<span class="cm">// 下载 (返回 InputStream)</span>
+InputStream in = s3.getObjectInputStream(key);
+<span class="cm">// 范围读取 (断点续传)</span>
+InputStream range = s3.getObjectInputStream(key, start, end);
+<span class="cm">// 删除</span>
+s3.removeObject(key);
+<span class="cm">// 批量删除</span>
+s3.removeObjects(bucket, Arrays.asList(key1, key2, key3));</div>
+          </div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <span class="step-num">05</span>
+        <div class="step-content">
+          <div class="step-title">生成访问链接</div>
+          <div class="step-desc">
+            使用 <span class="inline-code-sec">getGatewayUrl</span> 获取公开访问链接，
+            或预签名 URL 安全分享文件。支持自定义过期时间与 HTTP 方法。
+            <div class="code-block"><span class="cm">// 公开访问（需 bucket 策略允许）</span>
+String url = s3.getGatewayUrl(key);
+<span class="cm">// 预签名 GET URL（15 分钟有效）</span>
+String presigned = s3.getObjectUrl(key, 15, TimeUnit.MINUTES);
+<span class="cm">// 预签名 PUT URL（10 分钟有效，前端直传）</span>
+String putUrl = s3.getPresignedObjectPutUrl(bucket, key, 10);
+<span class="cm">// 自定义方法预签名</span>
+String custom = s3.getObjectUrl(bucket, key, 1, TimeUnit.HOURS, HttpMethod.DELETE);</div>
+          </div>
+        </div>
+      </div>
+      <div class="workflow-step">
+        <span class="step-num">06</span>
+        <div class="step-content">
+          <div class="step-title">配置生命周期策略</div>
+          <div class="step-desc">
+            设置过期规则自动清理临时文件，或配置版本控制追踪文件变更。
+            事件通知可对接 SNS / SQS / Lambda。
+            <div class="code-block"><span class="cm">// 30 天后自动删除</span>
+BucketLifecycleConfiguration config =
+  <span class="kw">new</span> BucketLifecycleConfiguration();
+List&lt;Rule&gt; rules = <span class="kw">new</span> ArrayList&lt;&gt;();
+rules.add(<span class="kw">new</span> Rule()
+  .withId(<span class="str">"temp-expiry"</span>)
+  .withExpirationInDays(30)
+  .withStatus(BucketLifecycleConfiguration.ENABLED));
+config.setRules(rules);
+s3.setBucketLifecycleConfiguration(config);
+
+<span class="cm">// 启用版本控制</span>
+s3.enableBucketVersioning();
+<span class="cm">// 列出所有版本</span>
+s3.listVersions(prefix);</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block" style="margin-top:var(--space-xl)">
+<span class="cm">// 完整示例：文件上传 REST 控制器</span>
+<span class="kw">@RestController</span>
+<span class="kw">@RequiredArgsConstructor</span>
+<span class="kw">public class</span> FileController {
+
+  <span class="kw">private final</span> AmazonS3Template s3;
+
+  <span class="kw">@PostMapping</span>(<span class="str">"/upload"</span>)
+  <span class="kw">public</span> Map&lt;String, Object&gt; upload(<span class="kw">@RequestParam</span> MultipartFile file) {
+    String key = <span class="str">"uploads/"</span> + System.currentTimeMillis() + <span class="str">"_"</span> + file.getOriginalFilename();
+    PutObjectResult result = s3.putObject(key, file, <span class="kw">null</span>);
+    <span class="kw">return</span> Map.of(
+      <span class="str">"etag"</span>, result.getETag(),
+      <span class="str">"url"</span>, s3.getGatewayUrl(key)
+    );
+  }
+
+  <span class="kw">@GetMapping</span>(<span class="str">"/download/{key}"</span>)
+  <span class="kw">public</span> ResponseEntity&lt;StreamingResponseBody&gt; download(<span class="kw">@PathVariable</span> String key) {
+    S3Object obj = s3.getObject(key);
+    StreamingResponseBody body = os -&gt; {
+      <span class="kw">try</span> (InputStream in = obj.getObjectContent()) {
+        <span class="kw">int</span> len; <span class="kw">byte</span>[] buf = <span class="kw">new</span> <span class="kw">byte</span>[8192];
+        <span class="kw">while</span> ((len = in.read(buf)) != -1) os.write(buf, 0, len);
+      }
+    };
+    <span class="kw">return</span> ResponseEntity.ok()
+      .header(<span class="str">"Content-Type"</span>, obj.getObjectMetadata().getContentType())
+      .body(body);
+  }
+}</div>
+  </section>
+
+  <!-- ============================ API REFERENCE ============================ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">[05]</span>
+      <span class="section-line"></span>
+    </div>
+    <h2 class="section-title">
+      <span class="label-prefix">/ API 参考</span>
+      API 分组
+    </h2>
+
+    <p class="pipeline-desc">
+      <span class="inline-code-sec">AmazonS3Template</span> 提供 80+ 方法，
+      按功能分为以下 5 组。所有方法均支持自定义 Bucket 和默认 Bucket 两种模式。
+    </p>
+
+    <table class="ext-table">
+      <thead>
+        <tr>
+          <th>分组</th>
+          <th>方法数</th>
+          <th>核心方法</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Bucket</td>
+          <td>8</td>
+          <td>createBucket / removeBucket / existBucket / getAllBuckets / setBucketPolicy</td>
+          <td>存储桶 CRUD 与三种内置策略模板（READ_ONLY / WRITE_ONLY / READ_WRITE）</td>
+        </tr>
+        <tr>
+          <td>Object</td>
+          <td>14</td>
+          <td>putObject / getObject / removeObject / copyObject / renameObject / getAllObjectsByPrefix</td>
+          <td>对象完整 CRUD，支持 InputStream / MultipartFile / byte[]，批量删除与范围读取</td>
+        </tr>
+        <tr>
+          <td>Presigned URL</td>
+          <td>5</td>
+          <td>getObjectUrl / getPresignedObjectPutUrl / getGatewayUrl</td>
+          <td>GET/PUT 预签名 URL，自定义过期时间与 HTTP 方法，自定义域名网关</td>
+        </tr>
+        <tr>
+          <td>Multipart</td>
+          <td>6</td>
+          <td>initiateMultipartUpload / uploadPart / completeMultipartUpload / abortMultipartUpload / listParts / listMultipartUploads</td>
+          <td>大文件分片上传全流程，断点续传支持</td>
+        </tr>
+        <tr>
+          <td>Metadata &amp; Config</td>
+          <td>7</td>
+          <td>getObjectMetadata / setObjectMetadata / enableBucketVersioning / setBucketLifecycleConfiguration / setBucketNotificationConfiguration</td>
+          <td>元数据管理、版本控制、生命周期策略、事件通知配置</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)">方法签名详情</p>
+    <p class="body-sm mb-lg">
+      以下列出每个分组的核心方法完整签名。所有方法均提供默认 Bucket 重载版本（省略 bucket 参数时使用配置的默认 Bucket）。
+    </p>
+
+    <p class="sub-heading" style="margin-top:0">存储桶管理</p>
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 创建存储桶 — 三种重载</span>
+Bucket createBucket(String bucketName)
+Bucket createBucket(String bucketName, String policyText)
+Bucket createBucket(String bucketName, <span class="kw">PolicyType</span> policyType)
+
+<span class="cm">// 删除 & 检查</span>
+<span class="kw">void</span> removeBucket(String bucketName)
+<span class="kw">boolean</span> existBucket(String bucketName)
+
+<span class="cm">// 查询</span>
+List&lt;Bucket&gt; getAllBuckets()
+Bucket getBucket(String bucketName)
+
+<span class="cm">// 策略配置</span>
+<span class="kw">void</span> setBucketPolicy(String bucketName, PolicyType policyType)</div>
+
+    <p class="sub-heading">对象操作</p>
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 上传</span>
+PutObjectResult putObject(String objectName, InputStream stream)
+PutObjectResult putObject(String objectName, MultipartFile multipartFile, Map&lt;String, String&gt; metadata)
+PutObjectResult putObject(String bucketName, String objectName, <span class="kw">byte</span>[] bytes, String contentType)
+
+<span class="cm">// 下载</span>
+S3Object getObject(String key)
+S3Object getObject(String bucketName, String key)
+InputStream getObjectInputStream(String key)
+InputStream getObjectInputStream(String key, <span class="kw">long</span> start, <span class="kw">long</span> end)
+<span class="kw">void</span> downloadObject(String key, File file)
+
+<span class="cm">// 删除 & 复制</span>
+<span class="kw">void</span> removeObject(String objectName)
+<span class="kw">void</span> removeObjects(String bucketName, List&lt;String&gt; objectNames)
+<span class="kw">void</span> copyObject(String sourceKey, String destKey)
+<span class="kw">void</span> renameObject(String oldKey, String newKey)
+
+<span class="cm">// 查询 & 检查</span>
+<span class="kw">boolean</span> doesObjectExist(String objectName)
+<span class="kw">long</span> getObjectSize(String key)
+Date getObjectLastModified(String key)
+ObjectListing getAllObjectsByPrefix(String prefix, String delimiter, Integer maxKeys)</div>
+
+    <p class="sub-heading">预签名 URL</p>
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 生成公开 URL（需桶策略允许）</span>
+String getGatewayUrl(String objectName)
+
+<span class="cm">// 生成预签名 URL（GET 下载）</span>
+String getObjectUrl(String objectName)
+String getObjectUrl(String objectName, <span class="kw">long</span> expireTime, TimeUnit timeUnit)
+String getObjectUrl(String bucket, String objectName, <span class="kw">long</span> expireTime, TimeUnit timeUnit, HttpMethod method)
+
+<span class="cm">// 生成预签名 URL（PUT 上传 — 前端直传）</span>
+String getPresignedObjectPutUrl(String objectName)
+String getPresignedObjectPutUrl(String bucket, String objectName, <span class="kw">int</span> expireTime, TimeUnit timeUnit)</div>
+
+    <p class="sub-heading">分片上传</p>
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 初始化</span>
+String initiateMultipartUpload(String objectName, String contentType)
+
+<span class="cm">// 上传分片</span>
+UploadPartResult uploadPart(String bucketName, String uploadId, String key, InputStream partStream, <span class="kw">int</span> partSize, <span class="kw">int</span> partNumber)
+
+<span class="cm">// 查询 & 完成 & 中止</span>
+ListPartsResult listParts(String bucketName, String key, String uploadId)
+<span class="kw">void</span> completeMultipartUpload(String key, String uploadId, List&lt;PartETag&gt; partETags)
+<span class="kw">void</span> abortMultipartUpload(String key, String uploadId)
+ListMultipartUploadsResult listMultipartUploads()</div>
+
+    <p class="sub-heading">元数据 & 配置</p>
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 元数据</span>
+ObjectMetadata getObjectMetadata(String key)
+<span class="kw">void</span> setObjectMetadata(String bucketName, String key, Map&lt;String, String&gt; metadata, String contentType)
+
+<span class="cm">// 版本控制</span>
+<span class="kw">void</span> enableBucketVersioning()
+<span class="kw">void</span> disableBucketVersioning()
+VersionListing listVersions(String prefix)
+
+<span class="cm">// 生命周期</span>
+<span class="kw">void</span> setBucketLifecycleConfiguration(BucketLifecycleConfiguration config)
+BucketLifecycleConfiguration getBucketLifecycleConfiguration()
+
+<span class="cm">// 事件通知</span>
+<span class="kw">void</span> setBucketNotificationConfiguration(BucketNotificationConfiguration config)
+BucketNotificationConfiguration getBucketNotificationConfiguration()</div>
+
+    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)">内置策略模板</p>
+    <p class="body-sm mb-lg">
+      创建存储桶时可直接指定内置策略，无需手动编写 Policy JSON：
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-md);margin-bottom:var(--space-lg)">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-md)">
+        <span class="caption" style="display:block;color:var(--interactive);margin-bottom:var(--space-xs)">READ_ONLY</span>
+        <span class="body-sm">GetBucketLocation<br/>ListBucket<br/>GetObject</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-md)">
+        <span class="caption" style="display:block;color:var(--warning);margin-bottom:var(--space-xs)">WRITE_ONLY</span>
+        <span class="body-sm">PutObject<br/>DeleteObject<br/>AbortMultipartUpload</span>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:var(--space-md)">
+        <span class="caption" style="display:block;color:var(--success);margin-bottom:var(--space-xs)">READ_WRITE</span>
+        <span class="body-sm">GetObject + PutObject<br/>DeleteObject + ListBucket<br/>完整读写权限</span>
+      </div>
+    </div>
+
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// READ_ONLY — 公开读取</span>
+s3.createBucket(<span class="str">"public-assets"</span>, PolicyType.READ_ONLY);
+<span class="cm">// 等价于：s3.setBucketPolicy("public-assets", readOnlyPolicyJson);</span>
+
+<span class="cm">// WRITE_ONLY — 匿名写入（上传/删除）</span>
+s3.createBucket(<span class="str">"uploads"</span>, PolicyType.WRITE_ONLY);
+
+<span class="cm">// READ_WRITE — 完全公开（列出+读写）</span>
+s3.createBucket(<span class="str">"shared"</span>, PolicyType.READ_WRITE);</div>
+
+    <p class="label" style="margin:var(--space-xl) 0 var(--space-sm)">完整代码示例</p>
+
+    <p class="sub-heading">文件上传 REST 控制器</p>
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 文件上传 — 接收 MultipartFile，返回 ETag 和访问 URL</span>
+<span class="kw">@RestController</span>
+<span class="kw">@RequestMapping</span>(<span class="str">"/files"</span>)
+<span class="kw">public class</span> FileController {
+
+  <span class="kw">@Autowired</span>
+  <span class="kw">private</span> AmazonS3Template s3;
+
+  <span class="kw">@PostMapping</span>(<span class="str">"/upload"</span>)
+  <span class="kw">public</span> Map&lt;String, Object&gt; upload(<span class="kw">@RequestParam</span> MultipartFile file) {
+    String key = <span class="str">"uploads/"</span> + System.currentTimeMillis()
+               + <span class="str">"_"</span> + file.getOriginalFilename();
+    PutObjectResult result = s3.putObject(key, file, <span class="kw">null</span>);
+    <span class="kw">return</span> Map.of(
+      <span class="str">"etag"</span>, result.getETag(),
+      <span class="str">"url"</span>, s3.getGatewayUrl(key)
+    );
+  }
+
+  <span class="kw">@GetMapping</span>(<span class="str">"/download/{key}"</span>)
+  <span class="kw">public</span> ResponseEntity&lt;StreamingResponseBody&gt; download(<span class="kw">@PathVariable</span> String key) {
+    S3Object obj = s3.getObject(key);
+    StreamingResponseBody body = os -&gt; {
+      <span class="kw">try</span> (InputStream in = obj.getObjectContent()) {
+        <span class="kw">int</span> len; <span class="kw">byte</span>[] buf = <span class="kw">new</span> <span class="kw">byte</span>[8192];
+        <span class="kw">while</span> ((len = in.read(buf)) != -1) os.write(buf, 0, len);
+      }
+    };
+    <span class="kw">return</span> ResponseEntity.ok()
+      .header(<span class="str">"Content-Type"</span>, obj.getObjectMetadata().getContentType())
+      .body(body);
+  }
+
+  <span class="kw">@DeleteMapping</span>(<span class="str">"/{key}"</span>)
+  <span class="kw">public</span> Result delete(<span class="kw">@PathVariable</span> String key) {
+    s3.removeObject(key);
+    <span class="kw">return</span> Result.ok(<span class="str">"deleted"</span>);
+  }
+}</div>
+
+    <p class="sub-heading">分片上传完整流程</p>
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 1. 初始化分片上传，获取 UploadId</span>
+String uploadId = s3.initiateMultipartUpload(key, <span class="str">"application/octet-stream"</span>);
+
+<span class="cm">// 2. 逐个上传分片（5MB ~ 5GB 每片）</span>
+List&lt;PartETag&gt; parts = <span class="kw">new</span> ArrayList&lt;&gt;();
+<span class="kw">for</span> (<span class="kw">int</span> i = 1; i &lt;= totalParts; i++) {
+  UploadPartResult r = s3.uploadPart(bucket, uploadId, key, partData, partLen, i);
+  parts.add(r.getPartETag());
+}
+
+<span class="cm">// 3. 完成分片上传</span>
+s3.completeMultipartUpload(key, uploadId, parts);
+
+<span class="cm">// 4. 异常时中止</span>
+<span class="cm">// s3.abortMultipartUpload(key, uploadId);</span>
+
+<span class="cm">// 5. 查看进行中的分片任务</span>
+<span class="cm">// s3.listMultipartUploads();</span></div>
+
+    <p class="sub-heading">带元数据 + 自定义路径上传</p>
+    <div class="code-block" style="margin-bottom:var(--space-lg)"><span class="cm">// 携带用户自定义元数据，按日期分目录存储</span>
+Map&lt;String, String&gt; meta = <span class="kw">new</span> HashMap&lt;&gt;();
+meta.put(<span class="str">"uploader"</span>, userId);
+meta.put(<span class="str">"category"</span>, <span class="str">"avatar"</span>);
+
+String key = String.format(
+  <span class="str">"avatar/%s/%d_%s"</span>,
+  LocalDate.now(),
+  System.currentTimeMillis(),
+  filename
+);
+
+s3.putObject(key, file, meta);
+
+<span class="cm">// 读取自定义元数据</span>
+ObjectMetadata metadata = s3.getObjectMetadata(key);
+String uploader = metadata.getUserMetaDataOf(<span class="str">"uploader"</span>);</div>
+
+    <p class="sub-heading">异常处理最佳实践</p>
+    <div class="code-block"><span class="cm">// 分别捕获服务端和客户端异常，精细化处理</span>
+<span class="kw">try</span> {
+  S3Object obj = s3.getObject(key);
+} <span class="kw">catch</span> (AmazonServiceException e) {
+  <span class="cm">// 服务端返回错误状态码</span>
+  <span class="kw">int</span> status = e.getStatusCode();     <span class="cm">// 403, 404, 500...</span>
+  String code = e.getErrorCode();      <span class="cm">// NoSuchKey, AccessDenied...</span>
+  log.warn(<span class="str">"S3 service error [{}]: {}"</span>, status, code);
+  <span class="kw">if</span> (status == 404) {
+    <span class="cm">// 对象不存在，返回 404</span>
+  }
+} <span class="kw">catch</span> (AmazonClientException e) {
+  <span class="cm">// 客户端网络问题</span>
+  log.error(<span class="str">"S3 client error: {}"</span>, e.getMessage());
+  <span class="cm">// 重试或返回 503</span>
+}</div>
+  </section>
+
+  <!-- ============================ NOTES ============================ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">[06]</span>
+      <span class="section-line"></span>
+    </div>
+    <h2 class="section-title">
+      <span class="label-prefix">/ 注意事项</span>
+      已知问题与实践
+    </h2>
+
+    <div class="grid-2">
+      <div>
+        <p class="sub-heading" style="margin-top:0">已知问题</p>
+        <div class="code-block" style="margin-top:var(--space-sm);font-size:12px;padding:var(--space-md)">
+<span class="cm">// 1. stream.available() 不可靠</span>
+Content-Length 可能不准确，
+建议改用 read() 循环
+
+<span class="cm">// 2. 仅支持单一默认 Bucket</span>
+多 Bucket 场景需自行管理多个
+AmazonS3Client 实例</div>
+
+        <p class="sub-heading mt-lg">架构限制</p>
+        <ul class="reason-list">
+          <li>无单元测试（<span class="inline-code-sec">src/test</span> 不存在）</li>
+          <li>使用 AWS SDK v1，需迁移到 Jakarta 命名空间才支持 Spring Boot 3.x</li>
+          <li>配置只支持单一默认 Bucket，多 Bucket 需自行管理</li>
+        </ul>
+      </div>
+      <div>
+        <p class="sub-heading" style="margin-top:0">最佳实践</p>
+        <ul class="reason-list">
+          <li>大文件使用分片上传，避免 OOM</li>
+          <li>对外暴露下载链接使用预签名 URL + 短过期时间</li>
+          <li>对象键使用 <span class="inline-code-sec">category/yyyy/MM/dd/uuid.ext</span> 格式</li>
+          <li>生产环境使用环境变量注入密钥，禁止硬编码</li>
+          <li>配置 <span class="inline-code-sec">custom-domain</span> 隐藏 S3 端点 URL</li>
+          <li>分别捕获 AmazonServiceException（服务端）和 AmazonClientException（客户端）</li>
+          <li>流式下载避免将大文件加载到内存</li>
+          <li>敏感配置使用 Spring Cloud Config 或 Vault 管理</li>
+          <li>启动时通过 CommandLineRunner 检查并创建默认 Bucket</li>
+          <li>使用 <span class="inline-code-sec">getObjectInputStream(key, start, end)</span> 实现范围读取</li>
+        </ul>
+
+        <p class="sub-heading mt-lg">版本历史</p>
+        <div class="code-block" style="font-size:12px;padding:var(--space-md)">
+<span class="val">0.0.3</span>  <span class="cm">当前版本 — 生产可用，核心功能完整</span>
+<span class="dim">0.0.1</span>  <span class="cm">初始版本 — 基础框架搭建，基础 API</span></div>
+      </div>
+    </div>
+
+    <p class="sub-heading mt-lg">异常处理参考</p>
+    <div class="code-block"><span class="kw">try</span> {
+  s3.getObject(key);
+} <span class="kw">catch</span> (AmazonServiceException e) {
+  <span class="cm">// 服务端返回错误状态码 (403, 404, 500...)</span>
+  log.error(<span class="str">"S3 service error: {}"</span>, e.getErrorCode());
+} <span class="kw">catch</span> (AmazonClientException e) {
+  <span class="cm">// 客户端网络问题 (连接超时、无法解析...)</span>
+  log.error(<span class="str">"S3 client error: {}"</span>, e.getMessage());
+}</div>
+  </section>
+
+  <!-- ============================ FAQ ============================ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-number">[07]</span>
+      <span class="section-line"></span>
+    </div>
+    <h2 class="section-title">
+      <span class="label-prefix">/ 常见问题</span>
+      FAQ
+    </h2>
+
+    <div style="display:flex;flex-direction:column;gap:var(--space-md);max-width:900px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 这个 Starter 是否支持 AWS S3 之外的存储服务？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 支持。所有兼容 S3 协议的对象存储服务均可使用，包括 MinIO、阿里云 OSS、腾讯云 COS、
+          华为云 OBS、七牛云 Kodo、DigitalOcean Spaces 等。只需修改
+          <span class="inline-code-sec">endpoint</span> 和 <span class="inline-code-sec">path-style-access</span>
+          配置即可无缝切换。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 为什么 AWS SDK v1 而不是 v2？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 项目基于 Spring Boot 2.6.11（Java 8），SDK v1 提供更稳定的兼容性。
+          如需使用 SDK v2，可参考 <span class="inline-code-sec">AmazonS3Template</span> 的封装思路自行迁移。
+          SDK v2 使用 <span class="inline-code-sec">S3Client</span>（异步为 <span class="inline-code-sec">S3AsyncClient</span>），
+          需注意 Spring Boot 3.x 以上才提供 Jakarta 命名空间支持。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 如何配置多个 Bucket？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 当前版本配置只支持一个默认 Bucket。多 Bucket 场景可通过以下方式实现：
+          1）所有需要指定 Bucket 的方法都提供了带 <span class="inline-code-sec">bucketName</span> 参数的重载版本；
+          2）创建多个 <span class="inline-code-sec">AmazonS3Client</span> Bean 并各自封装 Template；
+          3）在业务代码中维护 Bucket 与 Template 的映射 Map。推荐方案二，后续版本将考虑内置多 Bucket 支持。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 生产环境推荐使用 HTTPS 吗？如何配置？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 强烈推荐。在 <span class="inline-code-sec">application.yml</span> 中将
+          <span class="inline-code-sec">winter-aws.protocol</span> 设为
+          <span class="inline-code-sec">https</span> 即可（不区分大小写），
+          Starter 自动选择 <span class="inline-code-sec">Protocol.HTTPS</span>。
+          同时建议使用 <span class="inline-code-sec">custom-domain</span> 配合 CDN 的 HTTPS 能力，
+          在网关层实现加密传输。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 文件上传报 Connection timed out 怎么办？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 常见原因及解决方案：1）确认 endpoint 地址正确且网络可达；
+          2）防火墙/安全组是否放行了对应端口；3）MinIO 默认使用 9000 端口，确认服务已启动；
+          4）在 <span class="inline-code-sec">application.yml</span> 中调大
+          <span class="inline-code-sec">winter-aws.connection-timeout</span>（默认 10000ms）；
+          5）检查 accessKey / secretKey 是否正确，认证失败也会表现为连接异常。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 如何调整 maxConnections 等连接参数？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 在 <span class="inline-code-sec">application.yml</span> 中配置即可：
+          <span class="inline-code-sec">winter-aws.max-connections</span>（默认 500）、
+          <span class="inline-code-sec">winter-aws.socket-timeout</span>（默认 20000ms）、
+          <span class="inline-code-sec">winter-aws.connection-timeout</span>（默认 10000ms）、
+          <span class="inline-code-sec">winter-aws.max-error-retry</span>（默认 2）。
+          所有参数已暴露到 Properties，无需修改源码。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 大文件上传如何避免 OOM？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 推荐使用分片上传（Multipart Upload）处理大文件：1）调用
+          <span class="inline-code-sec">initiateMultipartUpload</span> 获取 UploadId；
+          2）将文件切分为 5MB~5GB 的分片逐个调用 <span class="inline-code-sec">uploadPart</span>；
+          3）所有分片上传成功后调用 <span class="inline-code-sec">completeMultipartUpload</span> 合并。
+          分片上传避免了将整个文件加载到内存，且支持断点续传。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 如何调试 S3 请求？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> AWS SDK v1 支持通过系统属性或
+          <span class="inline-code-sec">ClientConfiguration</span> 开启请求/响应日志：
+          1）添加 <span class="inline-code-sec">log4j.logger.com.amazonaws.request=DEBUG</span>；
+          2）在 <span class="inline-code-sec">ClientConfiguration</span> 上设置
+          <span class="inline-code-sec">setRequestMetricCollector</span>；
+          3）捕获 <span class="inline-code-sec">AmazonServiceException</span> 中的
+          <span class="inline-code-sec">getErrorCode()</span> 和 <span class="inline-code-sec">getErrorMessage()</span>
+          获得详细的错误信息。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 如何将文件列表分页？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 使用
+          <span class="inline-code-sec">getAllObjectsByPrefix(prefix, delimiter, maxKeys)</span>
+          方法，返回 <span class="inline-code-sec">ObjectListing</span> 对象。
+          通过 <span class="inline-code-sec">objectListing.getNextMarker()</span>
+          获取下一页标记，传入下一次请求的 <span class="inline-code-sec">marker</span> 参数。
+          S3 默认每次最多返回 1000 条记录，可通过 <span class="inline-code-sec">maxKeys</span> 调整。
+        </p>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:var(--space-lg)">
+        <p class="sub-heading" style="margin-top:0">Q: 是否支持 Spring Boot 3.x？</p>
+        <p class="body-sm" style="color:var(--text-primary)">
+          <span style="color:var(--success);font-weight:500">A:</span> 当前版本基于 Spring Boot 2.6.11 和 Java 8，使用 javax 命名空间，不直接兼容
+          Spring Boot 3.x（jakarta 命名空间）。如需迁移至 Spring Boot 3.x，需要：1）将
+          <span class="inline-code-sec">javax.*</span> 替换为 <span class="inline-code-sec">jakarta.*</span>；
+          2）升级 AWS SDK 至 v2；3）验证 <span class="inline-code-sec">spring.factories</span> 在新版本中的兼容性。
+          计划在未来版本提供 Spring Boot 3.x 支持。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ FOOTER ============================ -->
+  <footer class="footer">
+    <div class="flex flex-col gap-xs" style="gap:var(--space-xs)">
+      <span class="label">Winter MinIO Spring Boot Starter</span>
+      <span class="caption">Apache 2.0 &middot; Java 8+ &middot; Spring Boot 2.6.11 &middot; AWS SDK 1.12.709</span>
+    </div>
+    <div class="flex gap-md" style="gap:var(--space-md)">
+      <a href="https://github.com/hahaha-zsq/winter-minio-spring-boot-starter" target="_blank">GitHub</a>
+      <a href="https://central.sonatype.com/artifact/io.github.hahaha-zsq/winter-minio-spring-boot-starter" target="_blank">Maven 中央仓库</a>
+    </div>
+  </footer>
+</body>
+</html>
