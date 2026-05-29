@@ -39,32 +39,37 @@ public class AmazonS3AutoConfiguration {
     @Bean
     public AmazonS3 amazon(AmazonS3Properties minioProperties) {
         // 禁用AWS SDK 1.x弃用警告
+        // 禁用 AWS SDK 1.x 弃用警告（SDK v1 在 2024 年进入维护期，不再有新功能更新）
         System.setProperty("aws.java.v1.disableDeprecationAnnouncement", "true");
-        
-        //设置连接时的参数
+
+        // 创建客户端配置对象，所有连接参数统一通过该对象传递
         ClientConfiguration config = new ClientConfiguration();
-        // 设置AmazonS3使用的最大连接数
-        config.setMaxConnections(500);
-        // 设置socket超时时间
-        config.setSocketTimeout(20000);
-        // 设置失败请求重试次数
-        config.setMaxConnections(2);
-        //设置连接方式为HTTP，可选参数为HTTP和HTTPS
-        config.setProtocol(Protocol.HTTP);
-        //设置网络访问超时时间
-        config.setConnectionTimeout(10000);
-
-
+        // 设置连接池最大连接数，避免高并发下连接数不足；默认 500
+        config.setMaxConnections(minioProperties.getMaxConnections());
+        // 设置 Socket 超时时间（毫秒），数据传输最大等待时间；默认 20000ms
+        config.setSocketTimeout(minioProperties.getSocketTimeout());
+        // 设置失败请求重试次数，网络抖动时自动重试；默认 2 次
+        config.setMaxErrorRetry(minioProperties.getMaxErrorRetry());
+        // 设置连接超时时间（毫秒），建立 TCP 连接的最大等待时间；默认 10000ms
+        config.setConnectionTimeout(minioProperties.getConnectionTimeout());
+        // 根据配置的协议字符串（http/https）选择对应枚举，不区分大小写；默认 HTTP
+        Protocol protocol = minioProperties.getProtocol().equalsIgnoreCase("https") ? Protocol.HTTPS : Protocol.HTTP;
+        config.setProtocol(protocol);
+        // 启用 Expect: 100-continue 握手，上传大文件前先等待服务端确认，避免无效数据传输
         config.setUseExpectContinue(true);
+
+        // 使用 accessKey 和 secretKey 创建 AWS 凭证对象
         AWSCredentials credentials = new BasicAWSCredentials(minioProperties.getAccessKey(), minioProperties.getSecretKey());
-        //设置Endpoint
-        AwsClientBuilder.EndpointConfiguration end_point = new AwsClientBuilder.EndpointConfiguration(
+        // 封装 S3 服务端点（Endpoint）和区域（Region），Endpoint 格式如 http://localhost:9000
+        AwsClientBuilder.EndpointConfiguration endPoint = new AwsClientBuilder.EndpointConfiguration(
                 minioProperties.getEndpoint(), minioProperties.getRegion());
+        // 通过标准建造器构建 AmazonS3 客户端，链式注入所有配置
         return AmazonS3ClientBuilder.standard()
-                .withClientConfiguration(config)
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withEndpointConfiguration(end_point)
-                .withPathStyleAccessEnabled(minioProperties.getPathStyleAccess()).build();
+                .withClientConfiguration(config)          // 注入连接参数
+                .withCredentials(new AWSStaticCredentialsProvider(credentials)) // 注入认证信息
+                .withEndpointConfiguration(endPoint)      // 注入服务端点和区域
+                .withPathStyleAccessEnabled(minioProperties.getPathStyleAccess()) // true=路径风格(false=虚拟主机风格)
+                .build();
        /* withPathStyleAccessEnabled 是Amazon S3客户端配置中的一个选项，它用于指定是否启用路径样式访问（Path-Style Access）。
         在Amazon S3中，有两种不同的URL访问样式：
         虚拟主机访问样式（Virtual Hosted-Style Access）： 默认情况下，Amazon S3的访问样式是虚拟主机访问样式。在虚拟主机访问样式中，访问一个桶中的对象的URL的格式为

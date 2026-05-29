@@ -15,6 +15,11 @@ public class AmazonS3Properties {
     private String endpoint;
 
     /**
+     * 协议：支持http、https
+     */
+    private String protocol = "http";
+
+    /**
      * Access key就像用户ID，可以唯一标识你的账户
      */
     private String accessKey;
@@ -32,7 +37,7 @@ public class AmazonS3Properties {
     /**
      * 区域(默为ap-east-1)
      */
-    private String region= Regions.AP_EAST_1.name();
+    private String region = Regions.AP_EAST_1.name();
     /**
      * 自定义域名，配置此参数时，返回url优先使用
      */
@@ -49,4 +54,24 @@ public class AmazonS3Properties {
      * 是否启用，默认为：true，不填该属性或者为false不生效
      */
     private Boolean enabled = true;
+
+    /**
+     * 客户端最大连接数，默认 500
+     */
+    private Integer maxConnections = 500;
+
+    /**
+     * Socket 超时时间（毫秒），默认 20000
+     */
+    private Integer socketTimeout = 20000;
+
+    /**
+     * 失败请求重试次数，默认 2
+     */
+    private Integer maxErrorRetry = 2;
+
+    /**
+     * 网络连接超时时间（毫秒），默认 10000
+     */
+    private Integer connectionTimeout = 10000;
 }

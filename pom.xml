@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.hahaha-zsq</groupId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <artifactId>winter-minio-spring-boot-starter</artifactId>
 
     <packaging>jar</packaging>
@@ -31,6 +31,7 @@
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-configuration-processor</artifactId>-->
 <!--            <optional>true</optional>-->
+<!--            <version>${spring.boot.version}</version>-->
 <!--        </dependency>-->
         <dependency>
             <groupId>com.amazonaws</groupId>
@@ -53,11 +54,6 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.kangaroohy</groupId>-->
-<!--            <artifactId>oss-spring-boot-starter</artifactId>-->
-<!--            <version>3.0.2</version>-->
-<!--        </dependency>-->
     </dependencies>
     <licenses>
         <license>
